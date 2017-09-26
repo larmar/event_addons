@@ -1,0 +1,93 @@
+<odoo>
+    <data>
+
+        <template id="assets_backend" name="eventquestions_assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/website_event_advanced_questions/static/src/css/event.questions.css"/>
+                <!-- <script type="text/javascript" src="/website_event_advanced_questions/static/src/js/event.questions.js"></script> -->
+            </xpath>
+        </template>
+
+        <!-- <record id="action_event_view" model="ir.actions.client">
+            <field name="name">Event questions client</field>
+            <field name="tag">event.event_questions.EventQuestionForm</field>
+        </record> -->
+    
+        <!-- List all questions  -->
+        <record model="ir.ui.view" id="view_event_form_inherit_question">
+            <field name="name">event.form.inherit.question</field>
+            <field name="model">event.event</field>
+            <field name="inherit_id" ref="event.view_event_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//notebook" position="inside">
+                        <page string="Advanced Questions" >
+                            <field name="question_ids" nolabel="1">
+                                <tree>
+                                    <field name="sequence" widget="handle" />
+                                    <field name="title"/>
+                                    <field name="description"/>
+                                    <field name="is_individual"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_event_question_form">
+            <field name="name">event.question.form</field>
+            <field name="model">event.question</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@class='o_form_sheet']" position="after">
+                    <script type="text/javascript" src="/website_event_advanced_questions/static/src/js/event.questions_be.js"></script>
+                </xpath>
+                <form string="Question">
+                    <sheet>
+                        <div>
+                            <label for="title" class="b"/>
+                            <field name="title" />
+                        </div>
+                        <div>
+                            <label for="is_individual" class="b"/>
+                            <field name="is_individual"/>
+                        </div>
+                        <div>
+                            <label for="description" class="b"/>
+                            <field name="description" colspan="10" rowspan="10"/>
+                        </div>
+                        <div>
+                            <label for="dataTypes" class="b"/>
+                            <field name="dataTypes" id="inpDataTypes" />
+                        </div>
+                        <div>
+                            <field name="dataTypeValues" invisible="1">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="value"/>
+                                </tree>
+                            </field>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+            <!-- <field name="dataTypes" position="attributes">
+                <attribute name="class">eventQuestionDataTypes</attribute>
+            </field> -->
+        </record>
+        
+        <!-- <record model="ir.ui.menu" id="base.event_menu_replace_attr">
+            <xpath expr="//menuitem[@id='menu_event_event']" position="attributes">
+                <attribute name="action">action_eventquestion</attribute>
+            </xpath>
+        </record> -->
+
+        
+
+        <!-- <menuitem name="Events" id="menu_event_event" action="action_event_view" parent="event.event_main_menu" /> -->
+        <!-- <menuitem id="home_page_petstore_menu" name="Home Page" parent="petstore_menu" action="action_home_page"/> -->
+
+    </data>
+</odoo>

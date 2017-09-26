@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="dt-1" model="event.question.datatype">
+            <field name="name">Text</field>
+            <field name="value">Text</field>
+        </record>
+        <record id="dt-2" model="event.question.datatype">
+            <field name="name">Longtext</field>
+            <field name="value">Longtext</field>
+        </record>
+        <record id="dt-3" model="event.question.datatype">
+            <field name="name">Email</field>
+            <field name="value">Email</field>
+        </record>
+        <record id="dt-4" model="event.question.datatype">
+            <field name="name">Dropdown</field>
+            <field name="value">Dropdown</field>
+        </record>
+        <record id="dt-5" model="event.question.datatype">
+            <field name="name">Checkbox</field>
+            <field name="value">Checkbox</field>
+        </record>
+        <record id="dt-6" model="event.question.datatype">
+            <field name="name">Radio</field>
+            <field name="value">Radio</field>
+        </record>
+        <record id="dt-7" model="event.question.datatype">
+            <field name="name">Number</field>
+            <field name="value">Number</field>
+        </record>
+        <record id="dt-8" model="event.question.datatype">
+            <field name="name">Range</field>
+            <field name="value">Range</field>
+        </record>
+    </data>
+</openerp>

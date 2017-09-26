@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- <data> -->
+        <template id="assets_backend" name="eventquestions_assets" inherit_id="web.assets_frontend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/website_event_advanced_questions/static/src/js/event.questions_fe.js"></script>
+            </xpath>
+        </template>
+
+        <template id="registration_attendee_details_questions" 
+            inherit_id="website_event.registration_attendee_details" 
+            name="Registration Attendee Details with questions">
+            
+            <data>
+
+                <!-- <xpath expr="//div[@class='container']/t[last()]" position="after">
+                    <t t-if="event.general_question_ids">
+                        <h4 class="page-header mt8"><strong>Common Questions</strong></h4>
+                        <div>
+                            <div t-foreach='event.general_question_ids' t-as='question'>
+                                <div class="row mb4">
+                                    <span class="col-md-7 mt4 text-right"><t t-esc='question.title'/></span>
+                                    <div class="col-md-5">
+                                        <select t-attf-name="0-answer_ids-#{question.id}" class="o_general_answer" required="true">
+                                            <t t-foreach='question.answer_ids' t-as="answer">
+                                                <option t-esc='answer.name' t-att-value='answer.id'/>
+                                            </t>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </xpath> -->
+                
+                <xpath expr="//div[@class='container']" position="replace">
+                    <style>
+                        .attendeeContent{
+                            border-bottom: solid 2px #ccc;
+                            padding-bottom: 20px;
+                            margin-bottom: 20px;
+                        }
+
+                        .attendeeContent h3{
+                            margin: 0 0 10px 0;
+                            padding: 0;
+                        }
+                    </style>
+                    <t t-set="counter_type" t-value="1"/>
+                    <t t-set="counter" t-value="0"/>
+
+                    <t t-foreach="tickets" t-as="ticket">
+                        <h4 class="page-header mt16">
+                            <strong>
+                                Ticket Type #<t t-raw="counter_type"/>: <t t-esc="ticket['name']"/>
+                                <t t-if="ticket['price'] == 0">(Free)</t>
+                            </strong>
+                        </h4>
+                        
+                        <t t-foreach="range(1, ticket['quantity'] + 1)" t-as="att_counter" name="attendee_loop">
+                            <t t-set="counter" t-value="counter + 1"/>
+                            <t t-set="attendee_placeholder">Attendee #%s</t>
+
+                            <div class="attendeeContent">
+                                <h3 t-esc="attendee_placeholder %counter"></h3>
+                                <div class="row">
+                                    <div class="col-md-4"><strong>Name</strong></div>
+                                    <div class="col-md-5"><strong>Email</strong></div>
+                                    <div class="col-md-3"><strong>Phone</strong> <span class="text-muted">(Optional)</span></div>
+                                </div>
+                                <div class="row mb4">
+                                    
+                                    <!-- t-att-placeholder="attendee_placeholder %counter" -->
+                                    <div class="col-md-4"><input class='form-control' type='text' t-attf-name="#{counter}-name" required="This field is required" /></div>
+                                    <div class="col-md-5"><input class='form-control' type='email' t-attf-name="#{counter}-email" required="This field is required"/></div>
+                                    <div class="col-md-3"><input class='form-control' type='tel' t-attf-name="#{counter}-phone"/></div>
+                                    <input class='hidden' type='text' t-attf-name="#{counter}-ticket_id" t-attf-value="#{ticket['id']}"/>
+                                </div>
+
+                                <t t-foreach="event.question_ids" t-as="item">
+                                    <div class="form-group" t-if="item.dataTypes == 'Text' or item.dataTypes == 'Email'">
+                                        <label for="#{counter}-inp-#{item.id}"><t t-esc="item.title" /></label>
+                                        <input t-if="item.dataTypes == 'Text'" type="text" class="form-control" id="#{counter}-inp-#{item.id}" name="#{counter}-inp-#{item.id}" />
+                                        <input t-if="item.dataTypes == 'Email'" type="email" class="form-control" id="#{counter}-inp-#{item.id}" name="#{counter}-inp-#{item.id}" />
+                                    </div>
+
+                                    <div class="form-group" t-if="item.dataTypes == 'Longtext'">
+                                        <label for="#{counter}-ta-#{item.id}"><t t-esc="item.title" /></label>
+                                        <textarea class="form-control" t-attf-name="#{counter}-ta-#{item.id}" rows="5"></textarea>
+                                    </div>
+
+                                    <div t-if="item.dataTypes == 'Dropdown'">
+                                        <label for="#{counter}-dtv-dd-#{item.id}"><t t-esc="item.title" /></label>
+                                        <select t-attf-name="#{counter}-dtv-dd-#{item.id}" class="form-control">
+                                            <option t-foreach="item.dataTypeValues" t-as="dtvItem" t-attf-name="#{counter}-dtv-option-#{item.id}-#{dtvItem.id}" t-attf-value="dtvItem.name">
+                                                <t t-esc="dtvItem.value" />
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group" t-if="item.dataTypes == 'Checkbox' or item.dataTypes == 'Radio'">
+                                        <t t-foreach='item.dataTypeValues' t-as="dtvCbItem">
+                                            <div t-attf-class="{{ 'checkbox' if item.dataTypes == 'Checkbox' else 'radio' }}">
+                                                <label>
+                                                    <input t-if="item.dataTypes == 'Checkbox'" t-attf-name="#{counter}-dtv-cb-#{item.id}-#{dtvCbItem.id}" t-attf-value="dtvCbItem.value" type="checkbox"/>
+                                                    <input t-if="item.dataTypes == 'Radio'" t-attf-name="#{counter}-dtv-cb-#{item.id}-#{dtvCbItem.id}" t-attf-value="dtvCbItem.value" type="radio"/>
+                                                    <t t-esc="dtvCbItem.name" />
+                                                </label>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </t>
+                            </div>
+                        </t>
+
+                        <t t-set="counter_type" t-value="counter_type + 1"/>
+                    </t>
+
+                </xpath>
+                
+                <!-- <xpath expr="//t[@name='attendee_loop']" position="inside">
+                    <div style="margin: 40px 0;">
+                        
+                    </div>
+                </xpath> -->
+            </data>
+        </template>
+
+        <!-- <template >
+            <data>
+
+            </data>
+        </template> -->
+
+
+        <!-- registration_form -->
+        <!-- <template id="registration_replace" inherit_id="website_event.registration_template">
+
+            <xpath expr="//form[@id='registration_form']" position="replace">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                <div style="margin: 0 0 20px 0" id="phAdvancedQuestions">
+
+                    <t t-foreach="event.question_ids" t-as="item">
+
+                        <div class="form-group" t-if="item.dataTypes == 'Text' or item.dataTypes == 'Email'">
+                            <label for="inp-#{item.id}"><t t-esc="item.title" /></label>
+                            <input t-if="item.dataTypes == 'Text'" type="text" class="form-control" id="inp-#{item.id}" />
+                            <input t-if="item.dataTypes == 'Email'" type="email" class="form-control" id="inp-#{item.id}" />
+                        </div>
+
+                        <div class="form-group" t-if="item.dataTypes == 'Longtext'">
+                            <label for="ta-#{item.id}"><t t-esc="item.title" /></label>
+                            <textarea class="form-control" t-attf-name="ta-#{item.id}" rows="5"></textarea>
+                        </div>
+
+                        <div t-if="item.dataTypes == 'Dropdown'">
+                            <label for="dtv-dd-#{item.id}"><t t-esc="item.title" /></label>
+                            <select t-attf-name="dtv-dd-#{item.id}" class="form-control">
+                                <option t-foreach="item.dataTypeValues" t-as="dtvItem" t-attf-name="dtv-option-#{item.id}-#{dtvItem.id}" t-attf-value="dtvItem.name">
+                                    <t t-esc="dtvItem.value" />
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" t-if="item.dataTypes == 'Checkbox' or item.dataTypes == 'Radio'">
+                            <t t-foreach='item.dataTypeValues' t-as="dtvCbItem">
+                                <div t-attf-class="{{ 'checkbox' if item.dataTypes == 'Checkbox' else 'radio' }}">
+                                    <label>
+                                        <input t-if="item.dataTypes == 'Checkbox'" t-attf-name="dtv-cb-#{item.id}-#{dtvCbItem.id}" t-attf-value="dtvCbItem.value" type="checkbox"/>
+                                        <input t-if="item.dataTypes == 'Radio'" t-attf-name="dtv-cb-#{item.id}-#{dtvCbItem.id}" t-attf-value="dtvCbItem.value" type="radio"/>
+                                        <t t-esc="dtvCbItem.name" />
+                                    </label>
+                                </div>
+                            </t>
+                        </div>
+                    </t>
+
+                    <div class="form-group">
+                        <a id="btnNewUser" class="btn btn-primary">Add</a>
+                    </div>
+                </div>
+
+                <button type="submit" 
+                        t-if="event.state == 'confirm' and (event.seats_availability == 'unlimited' or event.seats_available)"
+                        class="btn btn-primary btn-lg pull-right a-submit" 
+                        t-attf-id="#{event.id}">Register Now</button>
+
+                <div t-if="not event.state == 'confirm'" class="alert alert-info">
+                    <t t-if="event.state == 'draft'">
+                        Event registration not yet started.
+                    </t>
+                    <t t-if="event.state != 'draft'">
+                        Event registration is closed.
+                    </t>
+                    <t t-if="uid">
+                        <i class="fa fa-plus-circle">
+                            <a t-attf-href="/web#id=#{event.id}&amp;view_type=form&amp;model=event.event"> 
+                                <em>Configure and Launch Event Registration</em>
+                            </a>
+                        </i>
+                    </t>
+                </div>
+            </xpath>
+
+        </template> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <!-- <templates id="hPageTpl" inherit_id="website_event.index">
+            <div style="background-color: red;">This is some simple HTML</div>
+        </templates> -->
+
+        <!-- <template id="registration_attendee_details" name="Registration Attendee Details">
+            <div id="modal_attendees_registration" class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg">
+                    this is dialog test
+                </div>
+            </div>
+        </template> -->
+
+        <!-- <templates id="tmplQuestions">
+            <t t-name="tmplAdvancedQuestions">
+                <t t-foreach="event.question_ids" t-as="item">
+                
+                    <dt><strong>Title:</strong> <t t-esc="item.title"/></dt>
+                    <dd><strong>Id:</strong> <t t-esc="item.id"/></dd>
+                    <dd><strong>Event_id:</strong> <t t-esc="item.event_id"/></dd>
+                    <dd><strong>Sequence:</strong> <t t-esc="item.sequence"/></dd>
+                    <dd><strong>Is_individual:</strong> <t t-esc="item.is_individual"/></dd>
+                    <dd><strong>Description:</strong> <t t-esc="item.description"/></dd>
+                    <dd><strong>Datatypes:</strong> <t t-esc="item.dataTypes"/></dd>
+                    <dd><strong>DataTypeValues:</strong> <t t-esc="item.dataTypeValues"/></dd>
+
+                    <div class="form-group" t-if="item.dataTypes == 'Text' or item.dataTypes == 'Email'">
+                        <label for="inp-#{item.id}"><t t-esc="item.title" /></label>
+                        <input t-if="item.dataTypes == 'Text'" type="text" class="form-control" id="inp-#{item.id}" />
+                        <input t-if="item.dataTypes == 'Email'" type="email" class="form-control" id="inp-#{item.id}" />
+                    </div>
+
+                    <div class="form-group" t-if="item.dataTypes == 'Longtext'">
+                        <label for="ta-#{item.id}"><t t-esc="item.title" /></label>
+                        <textarea class="form-control" t-attf-name="ta-#{item.id}" rows="5"></textarea>
+                    </div>
+
+                    <div t-if="item.dataTypes == 'Dropdown'">
+                        <label for="dtv-dd-#{item.id}"><t t-esc="item.title" /></label>
+                        <select t-attf-name="dtv-dd-#{item.id}" class="form-control">
+                            <option t-foreach="item.dataTypeValues" t-as="dtvItem" t-attf-name="dtv-option-#{item.id}-#{dtvItem.id}" t-attf-value="dtvItem.name">
+                                <t t-esc="dtvItem.value" />
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" t-if="item.dataTypes == 'Checkbox' or item.dataTypes == 'Radio'">
+                        <t t-foreach='item.dataTypeValues' t-as="dtvCbItem">
+                            <div t-attf-class="{{ 'checkbox' if item.dataTypes == 'Checkbox' else 'radio' }}">
+                                <label>
+                                    <input t-if="item.dataTypes == 'Checkbox'" t-attf-name="dtv-cb-#{item.id}-#{dtvCbItem.id}" t-attf-value="dtvCbItem.value" type="checkbox"/>
+                                    <input t-if="item.dataTypes == 'Radio'" t-attf-name="dtv-cb-#{item.id}-#{dtvCbItem.id}" t-attf-value="dtvCbItem.value" type="radio"/>
+                                    <t t-esc="dtvCbItem.name" />
+                                </label>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </templates> -->
+    <!-- </data> -->
+</odoo>
