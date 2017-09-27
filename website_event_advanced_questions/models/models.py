@@ -22,14 +22,12 @@ class EventQuestion(models.Model):
     title = fields.Char(required=True, translate=True)
     event_id = fields.Many2one('event.event', required=True, ondelete='cascade')
     sequence = fields.Integer(default=10)
-    is_individual = fields.Boolean('Ask each attendee',
-                                   help="If True, this question will be asked for every attendee of a reservation. If "
-                                        "not it will be asked only once and its value propagated to every attendees.", default=True)
-
+    is_individual = fields.Boolean('Ask each attendee', default=True)
     description = fields.Text(translate=True)
-
+    answer_ids = fields.One2many('event.answer', 'question_id', "Answers", required=True, copy=True)
     dataTypeValues = fields.Many2many('event.question.datatypevalue', string="EventQuestionDataTypeValue")
-
+    isRequired = fields.Boolean('is required', default=True)
+    
     # dataTypes = fields.Selection('_get_data_types', default='Text')
     dataTypes = fields.Selection('_get_data_types')
 
@@ -49,23 +47,18 @@ class EventQuestionDataTypeValue(models.Model):
     value = fields.Char()
 
 
+# class EventQuestion(models.Model):
+#     _name = 'event.question'
+#     _rec_name = 'title'
+#     _order = 'sequence,id'
 
-
-
-
-
-class EventQuestion(models.Model):
-    _name = 'event.question'
-    _rec_name = 'title'
-    _order = 'sequence,id'
-
-    title = fields.Char(required=True, translate=True)
-    event_id = fields.Many2one('event.event', required=True, ondelete='cascade')
-    answer_ids = fields.One2many('event.answer', 'question_id', "Answers", required=True, copy=True)
-    sequence = fields.Integer(default=10)
-    is_individual = fields.Boolean('Ask each attendee',
-                                   help="If True, this question will be asked for every attendee of a reservation. If "
-                                        "not it will be asked only once and its value propagated to every attendees.")
+#     title = fields.Char(required=True, translate=True)
+#     event_id = fields.Many2one('event.event', required=True, ondelete='cascade')
+#     answer_ids = fields.One2many('event.answer', 'question_id', "Answers", required=True, copy=True)
+#     sequence = fields.Integer(default=10)
+#     is_individual = fields.Boolean('Ask each attendee',
+#                                    help="If True, this question will be asked for every attendee of a reservation. If "
+#                                         "not it will be asked only once and its value propagated to every attendees.")
 
 
 class EventAnswer(models.Model):

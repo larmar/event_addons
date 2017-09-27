@@ -3,7 +3,7 @@
     <!-- <data> -->
         <template id="assets_backend" name="eventquestions_assets" inherit_id="web.assets_frontend">
             <xpath expr="." position="inside">
-                <script type="text/javascript" src="/website_event_advanced_questions/static/src/js/event.questions_fe.js"></script>
+                <!-- <script type="text/javascript" src="/website_event_advanced_questions/static/src/js/event.questions_fe.js"></script> -->
             </xpath>
         </template>
 
@@ -12,26 +12,6 @@
             name="Registration Attendee Details with questions">
             
             <data>
-
-                <!-- <xpath expr="//div[@class='container']/t[last()]" position="after">
-                    <t t-if="event.general_question_ids">
-                        <h4 class="page-header mt8"><strong>Common Questions</strong></h4>
-                        <div>
-                            <div t-foreach='event.general_question_ids' t-as='question'>
-                                <div class="row mb4">
-                                    <span class="col-md-7 mt4 text-right"><t t-esc='question.title'/></span>
-                                    <div class="col-md-5">
-                                        <select t-attf-name="0-answer_ids-#{question.id}" class="o_general_answer" required="true">
-                                            <t t-foreach='question.answer_ids' t-as="answer">
-                                                <option t-esc='answer.name' t-att-value='answer.id'/>
-                                            </t>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </t>
-                </xpath> -->
                 
                 <xpath expr="//div[@class='container']" position="replace">
                     <style>
@@ -80,8 +60,13 @@
                                 <t t-foreach="event.question_ids" t-as="item">
                                     <div class="form-group" t-if="item.dataTypes == 'Text' or item.dataTypes == 'Email'">
                                         <label for="#{counter}-inp-#{item.id}"><t t-esc="item.title" /></label>
-                                        <input t-if="item.dataTypes == 'Text'" type="text" class="form-control" id="#{counter}-inp-#{item.id}" name="#{counter}-inp-#{item.id}" />
+                                        <input t-if="item.dataTypes == 'Text'" type="text" class="form-control" id="#{counter}-inp-#{item.id}" name="#{counter}-inp-#{item.id}"  />
                                         <input t-if="item.dataTypes == 'Email'" type="email" class="form-control" id="#{counter}-inp-#{item.id}" name="#{counter}-inp-#{item.id}" />
+                                        <t t-if="item.isRequired">
+                                            <!-- <xpath expr="//input[@name='#{counter}-inp-#{item.id}']" position="attributes">
+                                                <attribute name="required">This field is required</attribute>
+                                            </xpath> -->
+                                        </t>
                                     </div>
 
                                     <div class="form-group" t-if="item.dataTypes == 'Longtext'">
