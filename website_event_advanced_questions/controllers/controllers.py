@@ -1,32 +1,35 @@
 # -*- coding: utf-8 -*-
-from odoo import http
+from odoo.addons.website_event.controllers.main import WebsiteEventController
+from odoo import fields, http, _
+from odoo.http import request
 
-# class WebsiteEventQuestions(http.Controller):
-#     @http.route('/website_event_questions/website_event_questions/', auth='public')
-#     def index(self, **kw):
-#         return "Hello, world"
+import six
 
-#     @http.route('/website_event_questions/website_event_questions/objects/', auth='public')
-#     def list(self, **kw):
-#         return http.request.render('website_event_questions.listing', {
-#             'root': '/website_event_questions/website_event_questions',
-#             'objects': http.request.env['website_event_questions.website_event_questions'].search([]),
-#         })
+import logging
+_logger = logging.getLogger(__name__)
 
-#     @http.route('/website_event_questions/website_event_questions/objects/<model("website_event_questions.website_event_questions"):obj>/', auth='public')
-#     def object(self, obj, **kw):
-#         return http.request.render('website_event_questions.object', {
-#             'object': obj
-#         })
+class WebsiteEvent(WebsiteEventController):
 
-# @api.onchange('amount', 'unit_price')
-# def _onchange_price(self):
-#     # set auto-changing field
-#     self.price = self.amount * self.unit_price
-#     # Can optionally return a warning and domains
-#     return {
-#         'warning': {
-#             'title': "Something bad happened",
-#             'message': "It was very bad indeed",
-#         }
-#     }
+    def _process_registration_details(self, details):
+        _logger.error("_process_registration_details ............................... ")
+        ''' Process data posted from the attendee details form. '''
+        registrations = super(WebsiteEvent, self)._process_registration_details(details)
+        for registration in registrations:
+            answer_ids = []
+            question_ids = []
+            for key, value in registration.iteritems():
+                _logger.error("KEY: %r", key)
+                _logger.error("VALUE: %r", value)
+
+                if key.startswith('answer_ids-'):
+                    answer_ids.append([4, int(value)])
+
+                if key.startswith('questions_ids-') and isinstance(value, six.integer_types):
+                    question_ids.append([4, int(value)])
+                elif key.startswith('questions_ids-') and isinstance(value, six.string_types):
+                    question_ids.append([4, int(key.replace("questions_ids-", ""))])
+            
+            registration['answer_ids'] = answer_ids
+            registration['question_ids'] = question_ids
+
+        return registrations

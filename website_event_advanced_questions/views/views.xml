@@ -93,5 +93,18 @@
         <!-- <menuitem name="Events" id="menu_event_event" action="action_event_view" parent="event.event_main_menu" /> -->
         <!-- <menuitem id="home_page_petstore_menu" name="Home Page" parent="petstore_menu" action="action_home_page"/> -->
 
+
+
+        <record model="ir.ui.view" id="view_event_registration_form_inherit_advanced_question">
+            <field name="name">event.registration.form.inherit.advanced_question</field>
+            <field name="model">event.registration</field>
+            <field name="inherit_id" ref="event.view_event_registration_form" />
+            <field name="arch" type="xml">
+                <group name="event" position="inside">
+                    <field name="question_ids" widget="many2many_tags" readonly="1"/>
+                </group>
+            </field>
+        </record>
+
     </data>
 </odoo>
