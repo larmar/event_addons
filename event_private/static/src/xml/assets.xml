@@ -1,0 +1,11 @@
+<odoo>
+    <data>
+        
+        <template id="event_private_script" inherit_id="website.assets_frontend" name="event_private assets">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/event_private/static/src/js/event_private.js"></script>
+            </xpath>
+        </template>
+       
+    </data>
+</odoo>

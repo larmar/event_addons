@@ -1,0 +1,18 @@
+<odoo>
+    <data>
+
+        <!-- Event private   -->
+        <record model="ir.ui.view" id="event_private_inherit_view_event_form">
+            <field name="name">event.private.inherit.view.event.form</field>
+            <field name="model">event.event</field>
+            <field name="inherit_id" ref="event.view_event_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="privateStatus"/>
+                    <field name="shortUrl"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

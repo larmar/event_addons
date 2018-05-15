@@ -1,8 +1,7 @@
 odoo.define('website_event.website_event_private', function (require) {
 
-    var ajax = require('web.ajax');
     var Widget = require('web.Widget');
-    var web_editor_base = require('web_editor.base')
+    var web_editor_base = require('web_editor.base');
 
     // Catch registration form event, because of JS for attendee details
     var EventPrivateRegistrationForm = Widget.extend({
@@ -26,7 +25,7 @@ odoo.define('website_event.website_event_private', function (require) {
     });
 
     web_editor_base.ready().then(function () {
-        var event_private_registration_form = new EventPrivateRegistrationForm().appendTo($('#registration_form'));
+        new EventPrivateRegistrationForm().appendTo($('#registration_form'));
     });
 
     return {
